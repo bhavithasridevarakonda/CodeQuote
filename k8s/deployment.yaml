@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: codequote-deployment
+  labels:
+    app: codequote
+    tier: frontend
+    project: devops-college
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1        # Allows 1 extra pod during rolling update
+      maxUnavailable: 0  # Guarantees zero downtime by never dropping below 2 healthy pods
+  selector:
+    matchLabels:
+      app: codequote
+  template:
+    metadata:
+      labels:
+        app: codequote
+        tier: frontend
+    spec:
+      containers:
+      - name: codequote-container
+        image: yourdockerhubuser/codequote:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+
+        # Resource governance: prevents pods from starving the node
+        resources:
+          requests:
+            cpu: "50m"       # 0.05 CPU cores reserved
+            memory: "32Mi"   # 32 Megabytes RAM reserved
+          limits:
+            cpu: "200m"      # 0.2 CPU cores maximum throttle threshold
+            memory: "128Mi"  # 128 Megabytes RAM upper limit
+
+        # Readiness Probe: Ensures traffic is only routed after Nginx is responsive
+        readinessProbe:
+          httpGet:
+            path: /health.html
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 5
+          timeoutSeconds: 2
+          successThreshold: 1
+          failureThreshold: 2
+
+        # Liveness Probe: Restarts pod automatically if Nginx freezes or deadlocks
+        livenessProbe:
+          httpGet:
+            path: /health.html
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 2
+          successThreshold: 1
+          failureThreshold: 3

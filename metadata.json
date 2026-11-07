@@ -1,0 +1,6 @@
+{
+  "name": "CodeQuote - DevOps Showcase",
+  "description": "Developer inspiration and motivational quote website with complete DevOps CI/CD pipeline, Docker, Jenkins, and Kubernetes workflow.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

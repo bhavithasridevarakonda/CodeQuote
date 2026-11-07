@@ -1,0 +1,30 @@
+# Git and version control
+.git/
+.gitignore
+
+# Environment and secrets (Security rule: never leak keys into Docker image)
+.env
+.env.*
+*.secret
+*.pem
+*.key
+
+# Node and build artifacts
+node_modules/
+dist/
+build/
+.aistudio/
+
+# Tests & CI/CD workflow assets (only app/ is needed in production image)
+tests/
+k8s/
+Jenkinsfile
+README.md
+docs/
+*.md
+
+# Editor and OS junk
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
